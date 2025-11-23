@@ -7,6 +7,18 @@ const port = 8081;
 //   res.send(" --hello from use of expreess -");
 // });
 
+app.get(
+  "/multipleHandler",
+  (req, res, next) => {
+    console.log(" res 1 ");
+    // res.send("res 1");
+    next();
+  },
+  (req, res) => {
+    console.log(" res 2 ");
+    // res.send("res 2");
+  }
+);
 // query
 app.get("/chai", (req, res) => {
   console.log(req?.query, "--query ---");

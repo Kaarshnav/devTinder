@@ -11,5 +11,5 @@ const userSchema = new mongoose.Schema({
     type: Number,
   },
 });
-// this model rename wwasted 1 hr
+// this model rename wasted 1 hr so make sure the db name is matching at third arg
 module.exports = mongoose.model("User", userSchema, "chaiDrinkers");

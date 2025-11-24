@@ -1,35 +1,48 @@
 const connectDB = require("./config/database");
 const express = require("express");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const app = express();
-const port = 8081;
+const port = process.env.PORT;
 const User = require("./models/user");
+app.use(express.json());
 // app.use("/", (req, res) => {
 //   console.log(" at / path ");
 //   res.send(" --hello from use of expreess -");
 // });
 
 app.post("/signup", async (req, res) => {
-  // gettig data from query params
-  console.log(req.query);
-  // creating user from that
-  const firstUser = new User({
-    firstName: "sumit 2 ",
-    lastName: "yadav",
-    noOfTeaPerDay: 2,
-  });
-  console.log(req.query);
-  // 127.0.0.1:8081/signup?firstName=ram&lastName=ji
-  const dummyUser = new User({
-    firstName: req.query.firstName,
-    lastName: req.query.lastName,
-  });
+  try {
+    // gettig data from query params
+    // console.log(req.query);
+    console.log(req.body);
+    // creating user from that
+    // const firstUser = new User({
+    //   firstName: "sumit 2 ",
+    //   lastName: "yadav",
+    //   noOfTeaPerDay: 2,
+    // });
+    // console.log(req.query);
+    // 127.0.0.1:8081/signup?firstName=ram&lastName=ji
 
-  // saving data to db
-  // await mongodb.create(firstUser);
-  await firstUser.save();
-  await dummyUser.save();
-  console.log(firstUser);
-  res.send(" user addded succesfully ");
+    // const dummyUser = new User({
+    //   firstName: req.query.firstName,
+    //   lastName: req.query.lastName,
+    // });
+    const userFromBody = User(req.body);
+    // saving data to db
+    // await mongodb.create(firstUser);
+    // await firstUser.save();
+    // await dummyUser.save();
+    await userFromBody.save();
+
+    // console.log(firstUser);
+    res.send(" user addded succesfully ");
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send(err.message);
+  }
 });
 app.get(
   "/multipleHandler",

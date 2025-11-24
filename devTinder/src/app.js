@@ -2,21 +2,35 @@ const connectDB = require("./config/database");
 const express = require("express");
 const app = express();
 const port = 8081;
-
+const User = require("./models/user");
 // app.use("/", (req, res) => {
 //   console.log(" at / path ");
 //   res.send(" --hello from use of expreess -");
 // });
-connectDB()
-  .then(() => {
-    console.log(" db connected succesfully");
-    app.listen(port, () => {
-      console.log(`Express is listining you bahi at ${port} ...... `);
-    });
-  })
-  .catch((err) => {
-    console.log(" some error occured", err.message);
+
+app.post("/signup", async (req, res) => {
+  // gettig data from query params
+  console.log(req.query);
+  // creating user from that
+  const firstUser = new User({
+    firstName: "sumit 2 ",
+    lastName: "yadav",
+    noOfTeaPerDay: 2,
   });
+  console.log(req.query);
+  // 127.0.0.1:8081/signup?firstName=ram&lastName=ji
+  const dummyUser = new User({
+    firstName: req.query.firstName,
+    lastName: req.query.lastName,
+  });
+
+  // saving data to db
+  // await mongodb.create(firstUser);
+  await firstUser.save();
+  await dummyUser.save();
+  console.log(firstUser);
+  res.send(" user addded succesfully ");
+});
 app.get(
   "/multipleHandler",
   (req, res, next) => {
@@ -48,3 +62,13 @@ app.post("/user", (req, res) => {
 app.get("/user", (req, res) => {
   res.send(" hello to user from get of /user ");
 });
+connectDB()
+  .then(() => {
+    console.log(" db connected succesfully");
+    app.listen(port, () => {
+      console.log(`Express is listining you bahi at ${port} ...... `);
+    });
+  })
+  .catch((err) => {
+    console.log(" some error occured", err.message);
+  });

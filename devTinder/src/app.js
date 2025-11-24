@@ -1,3 +1,4 @@
+const connectDB = require("./config/database");
 const express = require("express");
 const app = express();
 const port = 8081;
@@ -6,7 +7,16 @@ const port = 8081;
 //   console.log(" at / path ");
 //   res.send(" --hello from use of expreess -");
 // });
-
+connectDB()
+  .then(() => {
+    console.log(" db connected succesfully");
+    app.listen(port, () => {
+      console.log(`Express is listining you bahi at ${port} ...... `);
+    });
+  })
+  .catch((err) => {
+    console.log(" some error occured", err.message);
+  });
 app.get(
   "/multipleHandler",
   (req, res, next) => {
@@ -37,8 +47,4 @@ app.post("/user", (req, res) => {
 });
 app.get("/user", (req, res) => {
   res.send(" hello to user from get of /user ");
-});
-
-app.listen(port, () => {
-  console.log(`Express is listining you bahi at ${port} ...... `);
 });

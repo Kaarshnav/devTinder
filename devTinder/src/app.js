@@ -3,13 +3,17 @@ const express = require("express");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const cookiesParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 const User = require("./models/user");
 
-app.use(express.json());
+app.use(express.json()); // so that we can read req.body
+app.use(cookiesParser()); // so that we can read from cookies stored in client
+
 // app.use("/", (req, res) => {
 //   console.log(" at / path ");
 //   res.send(" --hello from use of expreess -");
@@ -39,6 +43,22 @@ app.get("/getAllUser", async (req, res) => {
     res.send(400).send("something went wrong");
   }
 });
+app.get("/getProfileAfterLogin", async (req, res) => {
+  try {
+    console.log(" all cookies---", req.cookies);
+    const tokenFromCookies = req.cookies.token;
+
+    const userId = await jwt.verify(
+      tokenFromCookies,
+      process.env.JWT_SINGLE_KEY
+    );
+    console.log(userId, "--- dat from token decrpyt--");
+    const userFromDb = await User.findById(userId);
+    res.send(userFromDb);
+  } catch (err) {
+    res.status(400).send(" Something went wrong" + err.message);
+  }
+});
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -49,8 +69,24 @@ app.post("/login", async (req, res) => {
     const userFromDb = await User.findOne({ email });
     if (!userFromDb) throw new Error(" user not found with that mail id  ");
     const isCoorectPass = await bcrypt.compare(password, userFromDb.password);
-    if (isCoorectPass) res.send(" User suggeesfully loggedin");
-    else {
+    if (isCoorectPass) {
+      console.log(userFromDb._id.toString(), process.env.JWT_SINGLE_KEY);
+      // cookies settig part will be doen after authentication
+      const token = await jwt.sign(
+        userFromDb._id.toString(),
+        process.env.JWT_SINGLE_KEY
+      ); // by deafult algo is HS256
+
+      console.log(token, " -- for --", userFromDb._id);
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 9000000000),
+        httpOnly: true,
+        strict: true,
+      });
+
+      //
+      res.send(" User suggeesfully loggedin");
+    } else {
       throw new Error(" incoreect pass ");
     }
   } catch (err) {

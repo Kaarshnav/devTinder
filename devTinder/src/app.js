@@ -6,7 +6,7 @@ const validator = require("validator");
 const cookiesParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 dotenv.config();
-
+const auth = require("./middlewares/auth");
 const app = express();
 const port = process.env.PORT;
 const User = require("./models/user");
@@ -43,18 +43,20 @@ app.get("/getAllUser", async (req, res) => {
     res.send(400).send("something went wrong");
   }
 });
-app.get("/getProfileAfterLogin", async (req, res) => {
+app.get("/getProfileAfterLogin", auth, async (req, res) => {
   try {
-    console.log(" all cookies---", req.cookies);
-    const tokenFromCookies = req.cookies.token;
+    // console.log(" all cookies---", req.cookies);
+    // const tokenFromCookies = req.cookies.token;
 
-    const userId = await jwt.verify(
-      tokenFromCookies,
-      process.env.JWT_SINGLE_KEY
-    );
-    console.log(userId, "--- dat from token decrpyt--");
-    const userFromDb = await User.findById(userId);
-    res.send(userFromDb);
+    // const userId = await jwt.verify(
+    //   tokenFromCookies,
+    //   process.env.JWT_SINGLE_KEY
+    // );
+    // console.log(userId, "--- dat from token decrpyt--");
+    // const userFromDb = await User.findById(userId);
+    // res.send(userFromDb);
+
+    res.send(req.userData);
   } catch (err) {
     res.status(400).send(" Something went wrong" + err.message);
   }

@@ -10,7 +10,7 @@ profileRouter.get("/getProfileAfterLogin", auth, async (req, res) => {
   }
 });
 
-profileRouter.get("/getAllUser", async (req, res) => {
+profileRouter.get("/getAllUser", auth, async (req, res) => {
   try {
     const users = await User.find({});
     if (users.length === 0) res.send(404).send("user not found");

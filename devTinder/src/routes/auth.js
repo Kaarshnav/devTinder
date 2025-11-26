@@ -4,6 +4,7 @@ const validator = require("validator");
 const authRouter = express.Router();
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const auth = require("../middlewares/auth");
 
 authRouter.post("/login", async (req, res) => {
   try {
@@ -61,6 +62,26 @@ authRouter.post("/signup", async (req, res) => {
     res.send(" user addded succesfully ");
   } catch (err) {
     res.status(500).send(err.message);
+  }
+});
+authRouter.post("/logout", auth, async (req, res) => {
+  try {
+    const user = req.userData;
+
+    if (user) {
+      res.cookie("token", " ", {
+        expires: Date.now(),
+        httpOnly: true, // to prevenyt xss
+        sameSite: "strict",
+        secure: true,
+      });
+
+      res.send(" User suggeesfully logged out");
+    } else {
+      throw new Error(" Something went wrong ");
+    }
+  } catch (err) {
+    res.status(404).send(" Invalid creds " + err.message);
   }
 });
 module.exports = authRouter;

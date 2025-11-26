@@ -13,6 +13,13 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     lastName: { type: String, trim: true },
+    gender: {
+      type: String,
+      enum: {
+        values: ["male", "female"],
+        message: "{VALUE} is not supported for status type ",
+      },
+    },
     noOfTeaPerDay: {
       type: Number,
       maxLength: 10,

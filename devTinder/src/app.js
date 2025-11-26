@@ -11,6 +11,7 @@ const port = process.env.PORT;
 const User = require("./models/user");
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
 
 //
 app.use(express.json()); // so that we can read req.body
@@ -19,6 +20,7 @@ app.use(cookiesParser()); // so that we can read from cookies stored in client
 
 app.use("/", authRouter);
 app.use("/profile", profileRouter);
+app.use("/request", requestRouter);
 
 connectDB()
   .then(() => {

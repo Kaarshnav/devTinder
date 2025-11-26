@@ -3,10 +3,9 @@ const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
   try {
-    console.log(req.cookies);
     const { token } = req.cookies;
     const decrpytUserId = await jwt.verify(token, process.env.JWT_SINGLE_KEY);
-    const userData = await User.findById({ _id: decrpytUserId });
+    const userData = await User.findById({ _id: decrpytUserId._id });
     if (userData) {
       req.userData = userData;
       next();

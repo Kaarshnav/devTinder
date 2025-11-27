@@ -8,6 +8,7 @@ const connectionSchema = new mongoose.Schema(
       // type: String,
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: "User",
     },
     toId: {
       type: mongoose.Schema.Types.ObjectId,

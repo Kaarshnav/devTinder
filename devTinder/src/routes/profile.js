@@ -4,9 +4,14 @@ const auth = require("../middlewares/auth");
 
 profileRouter.get("/getProfileAfterLogin", auth, async (req, res) => {
   try {
-    res.send(req.userData);
+    res
+      .status(200)
+      .json({ data: req.userData, message: " Data fetched succesfully " });
   } catch (err) {
-    res.status(400).send(" Something went wrong" + err.message);
+    console.log(err.message);
+    res
+      .status(400)
+      .json({ data: [], message: ` Something went wrong ${err.message}` });
   }
 });
 

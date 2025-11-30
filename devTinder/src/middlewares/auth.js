@@ -13,7 +13,10 @@ const auth = async (req, res, next) => {
       throw new Error(" Not authenticated");
     }
   } catch (err) {
-    res.status(400).send("User Not authenticated ..." + err.message);
+    res.status(401).json({
+      data: [],
+      message: `User Not authenticated ... ${err.message}`,
+    });
   }
 };
 module.exports = auth;

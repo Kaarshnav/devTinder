@@ -29,11 +29,19 @@ authRouter.post("/login", async (req, res) => {
         }
       ); // by deafult algo is HS256
 
+      // res.cookie("token", token, {
+      //   expires: new Date(Date.now() + 9000000000),
+      //   httpOnly: true, // to prevenyt xss
+      //   sameSite: "strict",
+      //   secure: true,
+      // });
       res.cookie("token", token, {
-        expires: new Date(Date.now() + 9000000000),
-        httpOnly: true, // to prevenyt xss
-        sameSite: "strict",
-        secure: true,
+        expires: new Date(Date.now() + 9000000000), // ~104 days
+        httpOnly: true,
+        sameSite: "None",
+        sameSite: "Lax", // works across pages in same site
+        secure: false, // must be false on HTTP localhost
+        path: "/", // available on all routes
       });
 
       //

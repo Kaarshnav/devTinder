@@ -37,7 +37,9 @@ authRouter.post("/login", async (req, res) => {
       });
 
       //
-      res.send(" User suggeesfully loggedin");
+      res
+        .status(200)
+        .json({ data: userFromDb, message: " User Loggin succesfully" });
     } else {
       throw new Error(" incoreect pass ");
     }

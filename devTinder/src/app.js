@@ -1,6 +1,7 @@
 const connectDB = require("./config/database");
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 const cookiesParser = require("cookie-parser");
 
@@ -14,6 +15,18 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 
+//
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://myFutureFeHosted.com",
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins, // direct whitelist array
+    credentials: true, // needed for cookies
+  })
+);
 //
 app.use(express.json()); // so that we can read req.body
 app.use(cookiesParser()); // so that we can read from cookies stored in client
